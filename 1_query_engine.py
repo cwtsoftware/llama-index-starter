@@ -59,9 +59,8 @@ index = VectorStoreIndex.from_documents(
   service_context=service_context
 )
 
-# nakon kreiranja indeksa, praksa je da se kreirani vektorski zapis spremi u dediciranu vektorsku bazu podataka, ali
-# u ovom tutorialu, radi jednostavnosti, svaki puta kada se pokrene python skripta se kreira novi vektorski zapis i ne sprema se
-# neki od često korištenih vektorskih baza podataka su Chroma, Pinecone, Faiss...
+# nakon kreiranja indeksa, praksa je da se kreirani vektorski zapis spremi u dediciranu vektorsku bazu podataka, neki
+# od njih su Chroma, Pinecone, Faiss...
 
 # za dobivanje rezultata kreira se query_engine preko kreiranog indeksa i postavi se upit
 query_engine = index.as_query_engine()
