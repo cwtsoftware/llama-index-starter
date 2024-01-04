@@ -108,7 +108,7 @@ agent = OpenAIAgent.from_tools(
 )
 
 # postavi pojedinačno pitanje
-res = agent.query("which year had more employes")
+res = agent.query("Which year had more employes?")
 print(res)
 
 # # razgovaraj sa agentom

@@ -126,5 +126,5 @@ for node in response2.source_nodes:
 
 # zaključak: najčešće će za precizno dohvačanje relevantnih čvorova biti dovoljan QuestionsAnsweredExtractor
 # dok će drugi alati za automatsko postavljanje meta podataka biti korišteni u specifičnim slučajevima
-# jedan od tih bi mogao biti kada je žele postaviti dugački čvorovi SummaryExtractor bi mogao biti koristan
-# ako se dokumenti učestalno mijenjaju, dodaju, ažuriraju i slično treba biti oprezan sa korištenjem tokena
+# jedan od tih bi mogao biti kada je žele postaviti dugački čvorovi, SummaryExtractor bi mogao biti koristan
+# ako se dokumenti učestalno mijenjaju, dodaju, ažuriraju i slično. Napomena, treba biti oprezan sa korištenjem tokena
