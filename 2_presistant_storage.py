@@ -33,7 +33,7 @@ try:
     storage_context = StorageContext.from_defaults(
         persist_dir="./storage/2021"
     )
-    twentyone_index = load_index_from_storage(storage_context)
+    index = load_index_from_storage(storage_context)
 
     index_loaded = True
 except:
@@ -44,16 +44,16 @@ print(index_loaded)
 # ako ne kreiraj novi
 if not index_loaded:
     # učitaj podatke
-    twentyone_docs = SimpleDirectoryReader(
+    docs = SimpleDirectoryReader(
         input_files=["./godisnje-izvjesce-2021-CA.pdf"]
     ).load_data()
 
     # kreiraj indeks
-    twentyone_index = VectorStoreIndex.from_documents(twentyone_docs)
+    index = VectorStoreIndex.from_documents(docs)
 
     # spremi zapis
-    twentyone_index.storage_context.persist(persist_dir="./storage/2021")
+    index.storage_context.persist(persist_dir="./storage/2021")
 
-query_engine = twentyone_index.as_query_engine(streaming=True)
+query_engine = index.as_query_engine(streaming=True)
 streaming_response = query_engine.query("Poslovnice u inozemstvu")
 streaming_response.print_response_stream()
