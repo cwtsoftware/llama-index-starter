@@ -10,37 +10,15 @@ openai_key = os.getenv("OPENAI_API_KEY")
 
 from llama_index.program import (
     OpenAIPydanticProgram,
-    DFFullProgram,
-    DFRowsProgram,
 )
 import pandas as pd
 from llama_index.llms import OpenAI
 
 from llama_index.program import (
     OpenAIPydanticProgram,
-    DFFullProgram,
-    DataFrame,
     DataFrameRowsOnly,
 )
 from llama_index.llms import OpenAI
-
-# inicijaliziraj prazan dataframe
-df = pd.DataFrame(
-    {
-        "Name": pd.Series(dtype="str"),
-        "Birth year": pd.Series(dtype="int"),
-        "City": pd.Series(dtype="str"),
-        "Proffesion": pd.Series(dtype="str"),
-        "Work experience": pd.Series(dtype="str"),
-        "Technologies": pd.Series(dtype="str"),
-    }
-)
-
-# initialize program, using existing df as schema
-df_rows_program = DFRowsProgram.from_defaults(
-    pydantic_program_cls=OpenAIPydanticProgram, 
-    df=df
-)
 
 # učitaj dokumente
 from pathlib import Path
@@ -54,7 +32,7 @@ pdf_files = Path("./resumes/").glob("*.pdf")
 
 program = OpenAIPydanticProgram.from_defaults(
     output_cls=DataFrameRowsOnly,
-    llm=OpenAI(temperature=0, model="gpt-4-1106-preview"),
+    llm=OpenAI(temperature=0, model="gpt-4-1106-preview"), # gpt-4-trubo
     prompt_template_str=(
         "Please extract the following text into a structured data:"
         " {input_str}. The column names are the following: ['Name', 'Birth date',"
@@ -66,19 +44,25 @@ program = OpenAIPydanticProgram.from_defaults(
     verbose=True,
 )
 
-rows =[]
+rows_list =[]
 for i, pdf_file in enumerate(pdf_files):
     document = loader.load_data(file_path=str(pdf_file), metadata=True)
     doc_text = ""
+    file = ""
     for doc in document:
         # ako tekst sadrži više od jednog novog reda, postavi samo jedan novi red
+        print(doc.metadata['file_path'])
+        file = os.path.basename(doc.metadata['file_path'])
         doc_text = doc_text + re.sub(r'\n\s*\n', '\n', doc.text)
 
-    res = program(
-        input_str=doc_text
-    )
-    rows.append(res.rows[0].row_values)
+    if i == 0:
+        res = program(
+            input_str=doc_text
+        )
+        row = res.rows[0].row_values
+        row.append(file)
+        rows_list.append(row)
 
-columns = ['Name', 'Birth date', 'City', 'Current company', 'Profession', 'Year of experience', 'Technologies', 'E-mail', 'Phone']
-df = pd.DataFrame(rows, columns=columns)
+columns = ['Name', 'Birth date', 'City', 'Current company', 'Profession', 'Year of experience', 'Technologies', 'E-mail', 'Phone', 'File']
+df = pd.DataFrame(rows_list, columns=columns)
 print(df)
