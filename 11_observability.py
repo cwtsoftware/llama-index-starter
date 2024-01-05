@@ -4,6 +4,17 @@ from dotenv import load_dotenv
 load_dotenv()
 openai_key = os.getenv("OPENAI_API_KEY")
 
+# u ovom modulu će se prikazati na koji način je moguće pratiti upite
+# llama-index nudi mnogo integracija za praćenje, ovdje se koriti Traceloop 
+
+# inicijalizira se Traceloop sa api_key-em koji se dobiva nakon registracija na njihovoj stranici (https://app.traceloop.com/)
+# za potrebe ovog tutoriala, Traceloop je besplatan
+# nakon poslanog upita, svi koraci se zapisujui moguće ih je pregledati na stranicama Traceloop-a
+from traceloop.sdk import Traceloop
+traceloop_key = os.getenv("TRACELOOP_API_KEY")
+
+Traceloop.init(disable_batch=True, api_key=traceloop_key)
+
 from llama_index import (
     VectorStoreIndex,
     SimpleDirectoryReader,
@@ -19,12 +30,8 @@ llm = OpenAI(
 service_context = ServiceContext.from_defaults(
     llm=llm
 )
-set_global_service_context(service_context) # postavlja se globalni service_context i uvijek se koristi za indekse
+set_global_service_context(service_context)
 
-# da nebi morali kreirati novi vektorski zapis svaki puta kada se pokrene skripta moguće je spremiti zapis lokalno
-# te ga učitati svaki puta kada se pokrene skirpta
-
-# ako već postoji kreirani zapis učitaj taj zapis
 from llama_index import (
     StorageContext,
     load_index_from_storage,
@@ -41,15 +48,12 @@ except:
 
 # ako ne kreiraj novi
 if not index_loaded:
-    # učitaj podatke
     docs = SimpleDirectoryReader(
         input_files=["./godisnje-izvjesce-2021-CA.pdf"]
     ).load_data()
 
-    # kreiraj indeks
     index = VectorStoreIndex.from_documents(docs)
 
-    # spremi zapis
     index.storage_context.persist(persist_dir="./storage/2021")
 
 query_engine = index.as_query_engine(streaming=True)

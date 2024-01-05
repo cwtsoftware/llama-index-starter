@@ -7,13 +7,6 @@ openai_key = os.getenv("OPENAI_API_KEY")
 # u ovom modulu će se prikazati na koji način se dobivene informacije mogu strukturirati na smisleni način
 # u primjeru je nekoliko cv-a iz kojih se izvlače najbitnije informacije i postavljaju unutar DataFrame-a
 
-import pandas as pd
-
-from llama_index.llms import OpenAI
-
-
-from llama_index.llms import OpenAI
-
 # učitaj dokumente
 from pathlib import Path
 from llama_index import download_loader
@@ -29,6 +22,8 @@ from llama_index.program import (
     OpenAIPydanticProgram,
     DataFrameRowsOnly,
 )
+from llama_index.llms import OpenAI
+
 program = OpenAIPydanticProgram.from_defaults(
     output_cls=DataFrameRowsOnly,
     llm=OpenAI(temperature=0, model="gpt-4-1106-preview"), # gpt-4-trubo
@@ -64,6 +59,8 @@ for i, pdf_file in enumerate(pdf_files):
     rows_list.append(row)
 
 # strukturiranje rezultata u tablicu
+import pandas as pd
+
 columns = ['Name', 'Birth date', 'City', 'Current company', 'Profession', 'Year of experience', 'Technologies', 'E-mail', 'Phone', 'File']
 df = pd.DataFrame(rows_list, columns=columns)
 print(df)
