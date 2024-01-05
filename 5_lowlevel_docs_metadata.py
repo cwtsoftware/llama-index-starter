@@ -18,7 +18,7 @@ service_context = ServiceContext.from_defaults(
 )
 set_global_service_context(service_context)
 
-# u ovom modulu će se prikazati low-level koncepti upravljanja sa dokumentima i kreiranja meta podataka te
+# u ovom modulu će se prikazati low-level api koncepti upravljanja sa dokumentima i kreiranja meta podataka te
 # kreiranje automatskih meta podataka 
 # postoje SummaryExtractor (sažimanje čvora), QuestionsAnsweredExtractor (postavlja set pitanja
 # za kontekst čvora), TitleExtractor (postavlja naziv čvora), EntityExtractor (izvlači entitete)
@@ -44,9 +44,7 @@ extractors_2 = [
     ),
 ]
 
-# kao što je prije bilo navedeno, SimpleDirectoryReader automatski kreira čvorove, što oduzima
-# dostupne resurse kao što su vrijeme i novac stoga je prikladnije u ovom slučaju direktno
-# koristiti alat za pretvaranje dokumenta u tekst i kreiranje prilagođenih čvorova
+# u nastavku je prikazan primjer samostalnog definiranja instance dokumenta i dužine čvorova 
 # podsjetnik: SimpleDirectoryReader koristi veličinu čvorova od 1024 tokena, a ovdje će se
 # prikazati kreiranje čvorova od 512 tokena
 from pypdf import PdfReader
@@ -124,7 +122,6 @@ for node in response2.source_nodes:
     print("node.text -> ", node.text) # tekst izvora
     print("node.metadata -> ", node.metadata) # meta podaci izvora
 
-# zaključak: najčešće će za precizno dohvačanje relevantnih čvorova biti dovoljan QuestionsAnsweredExtractor
+# zaključak: ako je potrebno samostalno definirati meta podatke, najčešće će za precizno dohvačanje relevantnih čvorova biti dovoljan QuestionsAnsweredExtractor
 # dok će drugi alati za automatsko postavljanje meta podataka biti korišteni u specifičnim slučajevima
-# jedan od tih bi mogao biti kada je žele postaviti dugački čvorovi, SummaryExtractor bi mogao biti koristan
-# ako se dokumenti učestalno mijenjaju, dodaju, ažuriraju i slično. Napomena, treba biti oprezan sa korištenjem tokena
+# jedan od tih bi mogao biti kada je žele postaviti dugački čvorovi, zbog nužnosti konteksta tijekom upita, SummaryExtractor bi mogao poslužiti

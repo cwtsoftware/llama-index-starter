@@ -14,10 +14,10 @@ from llama_index.llms import OpenAI
 # slijed događaja do rezultata
 # učitavanje -> indeksiranje -> upit (rezultat)
 
-# tijekom faze učitavnja se učitavaju potrebni dokumenti, potrebni resursi i llm
+# tijekom faze učitavnja se učitavaju dokumenti, resursi i llm
 
-# prije početka upita, moguće je prilagoditi llm koji se koristi, najčešće je to
-# izdanje modela, temperatura (regulator nasumičnosti i kreativnosti, 0 - 1, gdje je 1 najveća vrijednost)
+# prije početka upita, moguće je prilagoditi llm koji se koristi, najčešće su to
+# temperatura (regulator nasumičnosti i kreativnosti, 0 - 1, gdje je 1 najveća vrijednost), sistemski upit (početni upit)
 # i veličina odgovora ili upita
 
 # postavi veličinu upita
@@ -33,8 +33,7 @@ llm = OpenAI(
     system_prompt="Respond in Croatian language",  # početni upit koji llm uvijek ima tijekom svakog upita
 )
 
-# ServiceContext je paket često korištenih resursa koji se koriste tijekom
-# stadija indeksiranja i upita
+# ServiceContext je paket često korištenih resursa koji se koriste tijekom stadija indeksiranja i upita
 service_context = ServiceContext.from_defaults(
     llm=llm,
     context_window=context_window,
@@ -47,20 +46,16 @@ documents = SimpleDirectoryReader(
     input_files=["./godisnje-izvjesce-2022-CA.pdf"]
 ).load_data()
 
-# slijedeći korak je kreiranje indeksa koji se koristi za izvlačenje
-# konteksta i/ili znanja iz vlastitih dokumenata i/ili izvora
-# za ovaj primjer će se koristiti godišnje izvješće Croatia Airlines-a za 2022. god.
+# slijedeći korak je kreiranje indeksa koji se koristi za izvlačenje konteksta i/ili znanja iz vlastitih dokumenata i/ili izvora
+# za ovaj primjer će se koristiti godišnje izvješće Croatia Airlines-a za 2022. godinu
 # indeks je struktura podataka koja omogućuje brzo dohvaćanje relevantnog konteksta za korisnički upit.
 # tijekom ovog tutorial-a koristit će se VectorStoreIndex
 # VectorStoreIndex pohranjuje svaki čvor (eng. node) kao numerički zapis unutar vektorske baze podataka
-# tijekom upita se i sami upit pretvara u numerički zapis, zatim se dohvaćaju najsličniji čvorovi i proslijeđuju prema llm-u
+# tijekom upita se i sami upit pretvara u numerički zapis, zatim se dohvaćaju najsličniji čvorovi i proslijeđuju prema llm-u kao dio upita
 index = VectorStoreIndex.from_documents(
   documents, 
   service_context=service_context
 )
-
-# nakon kreiranja indeksa, praksa je da se kreirani vektorski zapis spremi u dediciranu vektorsku bazu podataka, neki
-# od njih su Chroma, Pinecone, Faiss...
 
 # za dobivanje rezultata kreira se query_engine preko kreiranog indeksa i postavi se upit
 query_engine = index.as_query_engine()

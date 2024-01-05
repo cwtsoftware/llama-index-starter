@@ -29,8 +29,8 @@ index = VectorStoreIndex.from_documents(
 
 # chat_engine generalno dodaje nove funkcionalnosti i gradi se na temelju query_engine
 # kao što je rečeno u prijašnjem modulu, bitna razlika je u dodavanju povijesti tijekom cijelog razgovora
-# do sada su se koristili uglavnom high-level API koncepti, za korištenje prilagođene povijesti razgovora
-# mora se koristiti low-level API kompozicija 
+# do sada su se koristili uglavnom high-level api koncepti, za korištenje prilagođene povijesti razgovora
+# mora se koristiti low-level api kompozicija 
 from llama_index.llms import ChatMessage, MessageRole
 from llama_index.chat_engine.condense_plus_context import (
     CondensePlusContextChatEngine,
@@ -54,7 +54,7 @@ retreiver = index.as_retriever()
 
 # definira se CondensePlusContextChatEngine
 # ovo je ekvivalentno sa "chat_engine = index.as_chat_engine(chat_mode="condense_plus_context")" ali
-# sa low-level API kompozicijom; u kojem se definira svaki aspekt "ručno"
+# sa low-level api kompozicijom; u kojem se definira svaki aspekt "ručno"
 chat_engine = CondensePlusContextChatEngine.from_defaults(
     retriever=retreiver,
     query_engine=query_engine,

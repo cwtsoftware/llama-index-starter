@@ -19,7 +19,7 @@ service_context = ServiceContext.from_defaults(
 )
 set_global_service_context(service_context)
 
-# chat_engine se koristi u slučajevima kada se želi komunicirati sa višestrukim iteracijama tijekom kojih 
+# chat_engine se koristi u slučajevima kada komunikacija sa višestrukim iteracijama tijekom kojih 
 # se prati povijest razgovora u usporedbi sa query_engine koji se koirsti u jednostrukim pitanjima
 
 documents = SimpleDirectoryReader(
